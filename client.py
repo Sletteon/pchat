@@ -28,7 +28,6 @@ while True:
 				sys.stdout.write(message)
 				sys.stdout.flush()
 	except KeyboardInterrupt:
-		server.send('AUT: Kiléptem.')
 		exit()
 server.close()
 

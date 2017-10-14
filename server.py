@@ -8,7 +8,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 if len(sys.argv) != 3:
-	print "Használat: Így használd: <szkript> IP-cím Port"
+	print "Így használd: <szkript> IP-cím Port"
 	exit()
 
 IP_address = str(sys.argv[1])
@@ -48,8 +48,7 @@ ______ |  |  __ ___/  |_  ____
 					
 			except:
 				continue
-				broadcast(str(addr[0]) + ' kilépett.', conn)
-
+				
 def broadcast(message, connection):
 	for clients in list_of_clients:
 		if clients!=connection:
@@ -63,13 +62,18 @@ def broadcast(message, connection):
 def remove(connection):
 	if connection in list_of_clients:
 		list_of_clients.remove(connection)
+		quitstring = str(addr[0]) + ' kilépett.'
+		broadcast(quitstring, conn)
+		print (quitstring)
 
 while True:
 
 	conn, addr = server.accept()
 	list_of_clients.append(conn)
 
-	print addr[0] + " csatlakozott"
+	connectedstring = str(addr[0]) + " csatlakozott"
+	broadcast(connectedstring, conn)
+	print (connectedstring) 
 
 	start_new_thread(clientthread,(conn,addr)) 
 
