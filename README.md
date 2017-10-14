@@ -1,6 +1,6 @@
 pchat
 ===================
- Egy nagyon egyszerű csetprogram működő kliens- és szerver szoftvert tartalmaz.<hr>
+ Egy nagyon egyszerű csetprogram működő kliens- és szerver szoftverrel.<hr>
 <h3>Szerver:</h3>
 <p>Indításkor egy socketet hoz létre a megadott porttal, valamint a szerver IP-címével. Ha hálózatok között (WAN) használjuk, akkor azt az IP-címet adjuk meg, amelyre IP-forwardeltünk. </p>
 <p>Ha valaki csatlakozik a szerverre, a megfelelő paraméterek mellett, akkor egy menő üdvölő üzenet fogadja a felhasználót.</p>
