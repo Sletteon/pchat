@@ -30,6 +30,6 @@ while True:
 				sys.stdout.flush()
 	except KeyboardInterrupt:
 		exit()
-	time.sleep(0,2)
+	time.sleep(0.2)
 server.close()
 
