@@ -3,6 +3,7 @@ import socket
 import select
 import sys
 from thread import *
+import time
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -34,21 +35,22 @@ ______ |  |  __ ___/  |_  ____
 Üdvözöllek, """ + str(addr[0]))
 
 	while True:
-			try:
-				message = conn.recv(2048)
-				if message:
+		try:
+			message = conn.recv(2048)
+			if message:
 
-					print "<" + addr[0] + "> " + message
+				print "<" + addr[0] + "> " + message
 
-					message_to_send = "<" + addr[0] + "> " + message
-					broadcast(message_to_send, conn)
-
-				else:
-					remove(conn)
+				message_to_send = "<" + addr[0] + "> " + message
+				broadcast(message_to_send, conn)
+	
+			else:
+				remove(conn)
+			time.sleep(0.2)
+						
+		except:
+			continue
 					
-			except:
-				continue
-				
 def broadcast(message, connection):
 	for clients in list_of_clients:
 		if clients!=connection:
@@ -66,17 +68,20 @@ def remove(connection):
 		broadcast(quitstring, conn)
 		print (quitstring)
 
-while True:
-
-	conn, addr = server.accept()
-	list_of_clients.append(conn)
-
-	connectedstring = str(addr[0]) + " csatlakozott"
-	broadcast(connectedstring, conn)
-	print (connectedstring) 
-
-	start_new_thread(clientthread,(conn,addr)) 
-
-conn.close()
-server.close()
+try:
+	while True:
+	
+		conn, addr = server.accept()
+		list_of_clients.append(conn)
+	
+		connectedstring = str(addr[0]) + " csatlakozott"
+		broadcast(connectedstring, conn)
+		print (connectedstring) 
+	
+		start_new_thread(clientthread,(conn,addr)) 
+		time.sleep(0.2) # 0,1 másodpercig várakozik, hogy csökkentse a CPU-használatot
+	
+except KeyboardInterrupt:
+	conn.close()
+	server.close()
 

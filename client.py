@@ -2,6 +2,7 @@
 import socket
 import select
 import sys
+import time
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 if len(sys.argv) != 3:
@@ -29,5 +30,6 @@ while True:
 				sys.stdout.flush()
 	except KeyboardInterrupt:
 		exit()
+	time.sleep(0,2)
 server.close()
 
