@@ -26,7 +26,7 @@ while True:
 		for socks in read_sockets:
 			if socks == server:
 				message = socks.recv(2048)
-				print message
+				print (message)
 			else:
 				sys.stdout.write("<Te>")
 				message = sys.stdin.readline()
