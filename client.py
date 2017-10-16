@@ -5,11 +5,16 @@ import sys
 import time
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-if len(sys.argv) != 3:
-	print "Így használd: <szkript> IP-cím, Port"
-	exit()
-IP_address = str(sys.argv[1])
-Port = int(sys.argv[2])
+#if len(sys.argv) != 3:
+#	print "Így használd: <szkript> IP-cím, Port"
+#	exit()
+#IP_address = str(sys.argv[1])
+#Port = int(sys.argv[2])
+IP_address = raw_input('Szerver IP címe: ')
+Port = raw_input('Szerver port: (alapértelmezett:5000)')
+if Port == '':
+	Port = 5000
+		
 server.connect((IP_address, Port))
 
 while True:
