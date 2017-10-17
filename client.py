@@ -3,6 +3,7 @@ import socket
 import select
 import sys
 import time
+import errno
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #if len(sys.argv) != 3:
@@ -14,8 +15,13 @@ IP_address = raw_input('Szerver IP címe: ')
 Port = raw_input('Szerver port: (alapértelmezett:5000)')
 if Port == '':
 	Port = 5000
-		
-server.connect((IP_address, Port))
+try:		
+	server.connect((IP_address, Port))
+except socket.error, v:
+    errorcode=v[0]
+    if errorcode==errno.ECONNREFUSED:
+        print "Kapcsolat elutasítva." 
+	exit()
 
 while True:
 	try:
@@ -25,7 +31,14 @@ while True:
 		
 		for socks in read_sockets:
 			if socks == server:
-				message = socks.recv(2048)
+				try:
+					message = socks.recv(2048)
+				except socket.error, v:
+					errorcode=v[0]
+					if errorcode==errno.ENOTCONN:
+						print("Hibás IP-cím")
+						exit()
+
 				print (message)
 			else:
 				sys.stdout.write("<Te>")
