@@ -23,17 +23,20 @@ IP_socket.connect(('google.com', 0))
 IP_address = IP_socket.getsockname()[0]
 print ('Szerver IP-címe: ' + IP_address)
 
+# Port lekérdezése, ha nem adott meg a felhasználó portot,
+# legyen az 5000.
 Port = raw_input('Port: (alapértelmezett:5000) ')
 if Port == '':
 	Port = 5000
-
+# Vonja össze az ip-t és a portot ebben a socketben.
 server.bind((IP_address,int(Port)))
-
+# Fogadjon el maximum 100 kapcsolatot egyszerre.
 server.listen(100)
-
+# Kliens listájának inicializálása
 list_of_clients = []
 print ("Szerver elindult\n")
-
+# Ez a funkció azt meséli el, mi történjen egy kliens csatlakozásakor,
+# valamint írja ki, mi történik a csetszobában.
 def clientthread(conn, addr):
 
 	conn.send("""
@@ -64,6 +67,7 @@ def clientthread(conn, addr):
 		except:
 			continue
 					
+# clients.send, csak ha nem működik, zárja be a kapcsolatot.
 def broadcast(message, connection):
 	for clients in list_of_clients:
 		if clients!=connection:
@@ -74,6 +78,8 @@ def broadcast(message, connection):
 
 				remove(clients)
 
+# Szakítsa meg a paraméterben megadott kapcsolatot,
+# és írja ki, hogy melyik kliens lépett ki
 def remove(connection):
 	if connection in list_of_clients:
 		list_of_clients.remove(connection)
@@ -81,6 +87,9 @@ def remove(connection):
 		broadcast(quitstring, conn)
 		print (quitstring+'\n')
 
+# Amíg fut a program, fogadjon el minden beérkező kérelmet,
+# írja ki, ki csatlakozott, hozzon létre minden új kapcsolatnak egy új 
+# párhuzamos folyamatot (nem tudom mi a threadnek a magyar megfelelője) 
 try:
 	while True:
 	
@@ -95,6 +104,13 @@ try:
 		time.sleep(0.2) # 0,1 másodpercig várakozik, hogy csökkentse a CPU-használatot
 	
 except KeyboardInterrupt:
-	conn.close()
-	server.close()
+	try:
+		# Ha senki nem csatlakozott, nem jön létre
+		# a conn objektum, hibát ír ki
+		conn.close() 		
+	except:
+		server.close()
+	else:
+		conn.close()
+		server.close()
 
