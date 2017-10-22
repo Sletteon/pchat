@@ -39,30 +39,28 @@ def clientthread(conn, addr):
 | |                         
 |_|                         
 Üdvözöllek, """ + str(addr[0]) + '\n')
-
 	while True:
 		try:
 			message = conn.recv(2048)
 			if message:
-
+	
 				print ("<" + addr[0] + "> " + message)
-
+	
 				message_to_send = "<" + addr[0] + ">" + message
 				broadcast(message_to_send, conn)
 	
 			else:
 				remove(conn)
-				time.sleep(0.2)
 						
 		except:
 			continue
-					
+		time.sleep(0.2)
 # clients.send, csak ha nem működik, zárja be a kapcsolatot.
 def broadcast(message, connection):
 	for clients in list_of_clients:
 		if clients!=connection:
 			try:
-				clients.send(message + '\n')
+				clients.send(message)
 			except:
 				clients.close()
 
@@ -73,7 +71,7 @@ def broadcast(message, connection):
 def remove(connection):
 	if connection in list_of_clients:
 		list_of_clients.remove(connection)
-		quitstring = str(addr[0]) + ' kilépett.'
+		quitstring = str(addr[0]) + ' kilépett.' 
 		broadcast(quitstring, conn)
 		print (quitstring)
 
@@ -85,7 +83,6 @@ try:
 	
 		conn, addr = server.accept()
 		list_of_clients.append(conn)
-	
 		connectedstring = str(addr[0]) + " csatlakozott"
 		broadcast(connectedstring, conn)
 		print (connectedstring) 

@@ -1,4 +1,5 @@
-#Forrás: https://stackoverflow.com/questions/12524994/encrypt-decrypt-using-pycrypto-aes-256
+# -*- coding: utf-8 -*-
+# Forrás: https://stackoverflow.com/questions/12524994/encrypt-decrypt-using-pycrypto-aes-256
 import base64
 import hashlib
 from Crypto import Random
