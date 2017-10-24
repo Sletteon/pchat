@@ -8,10 +8,16 @@ import time
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 ## google-re csatlakozás, ennek a socketnek a hostname-jét kéri le 
-IP_socket= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-IP_socket.connect(('google.com', 0))
-IP_address = IP_socket.getsockname()[0]
-print ('Szerver IP-címe: ' + IP_address)
+try:
+    IP_socket= socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    IP_socket.connect(('google.com', 0))
+    IP_address = IP_socket.getsockname()[0]
+    print ('Szerver IP-címe: ' + IP_address)
+except:
+    # Ha nincs internet kapcsolat, kérjünk el a felhasználótol
+    # egyet.
+    print('Nem sikerült lekérni az IP-címet')
+    IP_address = raw_input('Kérlek addj meg egyet: ')
 
 # Port lekérdezése, ha nem adott meg a felhasználó portot,
 # legyen az 5000.
@@ -29,6 +35,7 @@ print ("Szerver elindult\n")
 # valamint írja ki, mi történik a csetszobában.
 def clientthread(conn, addr):
 
+        # some üdvözlőüzenet
 	conn.send("""
             _           _   
            | |         | |  
@@ -39,20 +46,29 @@ def clientthread(conn, addr):
 | |                         
 |_|                         
 Üdvözöllek, """ + str(addr[0]) + '\n')
+        # amíg true true, próbáljon elkérni egy üzenetet.
 	while True:
 		try:
 			message = conn.recv(2048)
+                        # Ha kaptunk valamit
 			if message:
 	
+                                # Mutassa meg, mit kaptunk 
 				print ("<" + addr[0] + "> " + message)
 	
+                                # Csapja össze a kapott üzenetet az kliens IP-címével
 				message_to_send = "<" + addr[0] + ">" + message
+                                # Broadcas az egy nagyon fancy client.send
 				broadcast(message_to_send, conn)
 	
 			else:
+                                # Ha nincs semmi életjel egy klienstől,
+                                # akkor zárja be a kapcsolatot
 				remove(conn)
 						
 		except:
+                        # Ha 1 tickben nem kapott semmit,
+                        # ne szomorkodjon, hanem próbáljon meg még sokszor üzenetet szerezni
 			continue
 		time.sleep(0.2)
 # clients.send, csak ha nem működik, zárja be a kapcsolatot.

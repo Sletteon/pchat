@@ -22,7 +22,8 @@ Key = raw_input('Kulcs: ')
 aes = AESCipher(Key)
 # Ha a felhasználó rossz IP-címet adott meg,
 # vagy nem fut a szerver azon az IP-n
-# beszéljen vissza
+# beszéljen vissza.
+# Egyébként csatlakozzon a szerverre.
 try:		
 	server.connect((str(IP_address), int(Port)))
 except socket.error, v:
@@ -66,7 +67,7 @@ while True:
 				messnospc = message.strip(' ')
 				if ' ' not in noipmess:
 					# Ha siránkozik azzal, hogy nem 16bites a message, 
-					# akkor nincs kapcsolat a szerver és a kliens között
+					# akkor nincs kapcsolat a nem létező szerver és a kliens között
 					try:
 						# dekódolás
 						decrmes = aes.decrypt(noipmess)
@@ -75,6 +76,7 @@ while True:
 						exit()
 					# Írja ki az IP-vel együtt a dekódolt messaget
 					allstr = '<' + ipsubstr +'>: '+ decrmes
+                                        # Nem kérünk newline-t, köszönjük
 					print (allstr.rstrip())
 				else:
 					# Ha nincs enkódolva a message, 
@@ -96,6 +98,6 @@ while True:
 	# Ha ki akarunk lépni, ne jöjjön hibaüzenettel
 	except KeyboardInterrupt:
 		exit()
+        # some optimalizáció
 	time.sleep(0.2)
 server.close()
-
